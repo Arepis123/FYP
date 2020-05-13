@@ -1,7 +1,7 @@
   import 'package:flutter/material.dart';
   import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
   import 'package:netninja/services/auth.dart';
-  import 'package:netninja/shared/constants.dart';
   import 'package:netninja/shared/loading.dart';
 
   class Register extends StatefulWidget {
@@ -39,6 +39,38 @@
       });
     }
 
+
+//    DateTime _date = DateTime.now();
+//    Future <Null> _selectDate(BuildContext context) async {
+//        DateTime _datePicker = await showDatePicker(
+//            context: context,
+//            initialDate: _date,
+//            firstDate: DateTime(1950),
+//            lastDate: DateTime.now(),
+//        );
+//        if( _datePicker !=  null && _datePicker != _date ) {
+//            setState(() {
+//                _date = _datePicker;
+//            });
+//        }
+//    }
+
+    DateTime selectedDate =DateTime.now();
+    TextEditingController _date = new TextEditingController();
+
+    Future<Null> _selectDate(BuildContext context) async {
+      final DateTime picked = await showDatePicker(
+          context: context,
+          initialDate: selectedDate,
+          firstDate: DateTime(1901, 1),
+          lastDate: DateTime.now());
+      if (picked != null && picked != selectedDate)
+        setState(() {
+          selectedDate = picked;
+          _date.value = TextEditingValue(text: DateFormat('dd-MM-yyyy').format(picked).toString());
+        });
+    }
+
     @override
     Widget build(BuildContext context) {
         return loading ? Loading() : Scaffold(
@@ -51,7 +83,7 @@
                         children: <Widget>[
                             Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text('Sign Up', style: TextStyle( fontSize: 38, fontWeight: FontWeight.w600))
+                                child: Text('Sign Up', style: TextStyle( fontSize: 38, fontWeight: FontWeight.w400, color: Colors.black))
                             ),
                             Text(
                               error,
@@ -80,7 +112,7 @@
                                     ),
                                   ),
                                   hintText: 'Email',
-                                  hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                                  hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.mail, color: Colors.red,)
                               ),
                               validator: (val) => val.isEmpty ? 'Enter an email' : null,
@@ -111,7 +143,7 @@
                                     ),
                                   ),
                                   hintText: 'Password',
-                                  hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                                  hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.lock, color: Colors.red),
                                   suffixIcon: IconButton(
                                     onPressed: _toggleVisibility,
@@ -146,7 +178,7 @@
                                     ),
                                   ),
                                   hintText: 'Name',
-                                  hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                                  hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.account_circle, color: Colors.red,)
                               ),
                               validator: (val) => val.isEmpty ? 'Enter name' : null,
@@ -155,39 +187,39 @@
                               },
                             ),
                             SizedBox(height: 20.0),
-                            TextFormField(
-                              keyboardType:  TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                              decoration: new InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.red,
-                                        width: 1.5,
-                                        style: BorderStyle.solid
-                                    ),
+                            GestureDetector(
+                                onTap: () => _selectDate(context),
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    controller: _date,
+                                    keyboardType: TextInputType.datetime,
+                                  readOnly: true,
+                                  decoration: new InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.red,
+                                            width: 1.5,
+                                            style: BorderStyle.solid
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.red,
+                                          width: 1.5,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                      hintText:'Enter birth date',
+                                      hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                                      prefixIcon: Icon(Icons.calendar_today, color: Colors.red,)
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 1.5,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  hintText: 'Age',
-                                  hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
-                                  prefixIcon: Icon(Icons.child_care, color: Colors.red,)
                               ),
-                              validator: (val) => val.isEmpty ? 'Enter age' : null,
-                              onChanged: (val) {
-                                setState(() => age = val);
-                              },
+                                ),
                             ),
                             SizedBox(height: 20.0),
                             Container(
-                              
                               margin: EdgeInsets.all(0.2),                                                                                        // spacing outside border
                               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3.5),        // spacing inside border
                               //padding: EdgeInsets.symmetric(horizontal: 73, vertical: 4),
@@ -199,41 +231,40 @@
                               ),
                                 child: DropdownButton(
                                     isExpanded: true,
-                                    hint: Text('Please choose a location', style: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey)),
-
+                                    hint: Text('What is your gender?', style: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey)),
                                     value: _selectedType,
                                     onChanged: (newValue) {
                                         setState(() {
                                             _selectedType = newValue;
                                         });
                                     },
-                                    items: genderList.map((location) {
+                                    items: genderList.map((jantina) {
                                         return DropdownMenuItem(
-                                            child: new Text(location),
-                                            value: location,
+                                            child: new Text(jantina),
+                                            value: jantina,
                                         );
                                     }).toList(),
                                 ),
 
                           ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: 46.0),
                             ButtonTheme(
                                 height: 55,
                                 minWidth: 360,
                                 child: RaisedButton(
-                                    elevation: 5.0,
+                                    elevation: 1.0,
                                     shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(3.5)
                                     ),
                                   color: Colors.red,
-                                  child: Text( 'Register',
-                                      style: TextStyle(color: Colors.white),
+                                  child: Text( 'REGISTER',
+                                      style: new TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold )
                                   ),
                                   onPressed: () async {
                                       if (_formKey.currentState.validate()) {
                                           gender = _selectedType;
                                           dynamic result = await _auth
-                                                .registerWithEmailAndPassword(email, password,name,age,gender);
+                                                .registerWithEmailAndPassword(email, password,name,selectedDate,gender);
                                           if (result == null) {
                                               setState(() {
                                                   error = 'Please suppy a valid email';
@@ -244,9 +275,10 @@
                                    }
                                 ),
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: 35.0),
                             FlatButton(
                               onPressed: widget.toggleView,
+                              //onPressed: () {print(DateFormat('dd-MM-yy').format(_date));},
                               child: Text(
                                   'Already have Account ?',
                                   style: TextStyle(

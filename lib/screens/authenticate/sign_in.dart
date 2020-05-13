@@ -71,7 +71,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ),
                         hintText: 'Email',
-                        hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                        hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                         prefixIcon: Icon(Icons.mail, color: Colors.red,)
                     ),
                     validator: (val) => val.isEmpty ? 'Enter an email' : null,
@@ -101,7 +101,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ),
                         hintText: 'Password',
-                        hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                        hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                         prefixIcon: Icon(Icons.lock, color: Colors.red),
                         suffixIcon: IconButton(
                           onPressed: _toggleVisibility,
@@ -118,13 +118,13 @@ class _SignInState extends State<SignIn> {
                     height: 55,
                     minWidth: 360,
                     child: RaisedButton(
-                      elevation: 5.0,
+                      elevation: 1.0,
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(3.5)
                       ),
                       color: Colors.red,
                       child: Text(
-                        'LOG IN',
+                        'LOGIN',
                         style: new TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold ),
                       ),
                       onPressed: () async {
@@ -141,7 +141,7 @@ class _SignInState extends State<SignIn> {
                       },
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 35.0),
                   FlatButton(
                     onPressed: widget.toggleView,
                     child: Text(
@@ -149,7 +149,7 @@ class _SignInState extends State<SignIn> {
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
-                            fontWeight: FontWeight.w600
+                            fontWeight: FontWeight.bold
                         )
                     ),
                   ),

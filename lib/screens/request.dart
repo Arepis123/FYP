@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'drawer.dart';
 
 class Request extends StatefulWidget {
   @override
@@ -34,9 +33,8 @@ class _RequestState extends State<Request> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Add New Place'),
+          title: Text('Add New Place' , style: TextStyle( fontWeight: FontWeight.bold)),
           centerTitle: true,
-          elevation: 0.0,
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -45,7 +43,7 @@ class _RequestState extends State<Request> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       const SizedBox(height: 15.0),
-                      Text('Location Name' , style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.black87)),
+                      Text('Location Name' , style: TextStyle( fontSize: 17.0, fontWeight: FontWeight.bold, color:  Colors.black87)),
                       const SizedBox(height: 10.0),
                       TextFormField(
 //                        focusNode: FocusNode(),                                 // readonly
@@ -55,6 +53,7 @@ class _RequestState extends State<Request> {
                         autofocus: false,
                         keyboardType: TextInputType.text,
                         decoration: new InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
 //                          fillColor: Colors.grey.withOpacity(0.12),
 //                          filled: true,
                           enabledBorder: OutlineInputBorder(
@@ -73,14 +72,14 @@ class _RequestState extends State<Request> {
                           ),
                           // focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red[300])),
                           hintText: 'Name',
-                          hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                          hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                         ),
                         onChanged: (String placeName) {
                           getPlaceName(placeName);
                         },
                       ),
                       const SizedBox(height: 15.0),
-                      Text('Location Details' , style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.black87)),
+                      Text('Location Details' , style: TextStyle( fontSize: 17.0, fontWeight: FontWeight.bold, color:  Colors.black87)),
                       const SizedBox(height: 10.0),
                       TextFormField(
 //                        focusNode: FocusNode(),                                 // readonly
@@ -90,6 +89,7 @@ class _RequestState extends State<Request> {
                         autofocus: false,
                         keyboardType: TextInputType.text,
                         decoration: new InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
 //                          fillColor: Colors.grey.withOpacity(0.12),
 //                          filled: true,
                           enabledBorder: OutlineInputBorder(
@@ -108,7 +108,7 @@ class _RequestState extends State<Request> {
                           ),
                           // focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red[300])),
                           hintText: 'Details',
-                          hintStyle: TextStyle(fontFamily: 'SFDisplay', fontSize: 18.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                          hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                         ),
                         onChanged: (String placeDetails) {
                             getPlaceDetails(placeDetails);
@@ -132,7 +132,7 @@ class _RequestState extends State<Request> {
                                 color: Colors.red,
                                 //textColor: Colors.white,
                                 child: Text("Submit",
-                                    style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold )),
+                                    style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold )),
                               ),
                           )
                         ],

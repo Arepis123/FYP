@@ -1,3 +1,6 @@
+
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
@@ -8,12 +11,12 @@ class DatabaseService {
 
   final String uid ;
   final String email;
-  DatabaseService({ this.uid, this.email });
+  final File file;
+  DatabaseService({ this.uid, this.email, this.file });
 
-
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final CollectionReference reviewCollection = Firestore.instance.collection('reviews');
   final CollectionReference userCollection= Firestore.instance.collection("users");
+  final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://netninja-6cb94.appspot.com');
 
 
   Future createUser(NewUser user) async {
@@ -24,19 +27,45 @@ class DatabaseService {
       }
   }
 
-  // sudah ditinggalkan cara kuno ini
-  Future updateUserData(String name, String age, String gender) async {
-      return await reviewCollection.document(uid).setData({
-          'uid': uid,
-          'Email': email,
-          'Name': name,
-          'Age': age,
-          'Gender': gender,
+  void _changePassword(String password) async{
+    //Create an instance of the current user.
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+    //Pass in the password to updatePassword.
+    user.updatePassword(password).then((_){
+      print("Succesfull changed password");
+    }).catchError((error){
+      print("Password can't be changed" + error.toString());
+      //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
+    });
+  }
+
+  // Upload profile picture into FireStorage
+  uploadImage() async {
+    String filePath = 'profiles/${DateTime.now()}.png' ;
+    StorageUploadTask task = _storage.ref().child(filePath).putFile(file);
+
+    var downUrl = await (await task.onComplete).ref.getDownloadURL();
+    var url = downUrl.toString();
+    updateImageURL(url);
+    print('Download URL :  $url');
+
+    return url;
+  }
+
+  // Update profile picture's link
+  Future updateImageURL(url) async {
+      return await userCollection.document(uid).updateData({
+          'imageURL': url.toString()
       });
   }
 
-  Future<String> getCurrentUID() async {
-      return (await _firebaseAuth.currentUser()).uid;
+  Future updateProfile(String name,String gender,DateTime age) async {
+    return await userCollection.document(uid).updateData({
+      'name': name,
+      'gender': gender,
+      'age': age,
+    });
   }
 
   bool isLoggedIn() {

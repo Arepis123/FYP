@@ -9,6 +9,8 @@ class AuthService {
 
     NewUser _currentUser;
     NewUser get currentUser => _currentUser;
+    String role = 'User';
+    String imageURL= 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQsKNbGtuXiKKlaS0oDJ72NksP7CS-tl7YInR67NXNTgfvTfkXk&usqp=CAU';
 
     // create user obj based on FirebaseUser
     User _userFromFirebaseUser(FirebaseUser user) {
@@ -34,7 +36,7 @@ class AuthService {
     }
 
     // sign in with email and password
-    Future registerWithEmailAndPassword(String email, String password, String name, String age, String gender) async {
+    Future registerWithEmailAndPassword(String email, String password, String name, DateTime age, String gender) async {
         try {
 
             // create user authenticate
@@ -47,7 +49,10 @@ class AuthService {
                 email: email,
                 name: name,
                 age: age,
-                gender: gender );
+                gender: gender,
+                role: role,
+                imageURL: imageURL
+            );
             await DatabaseService().createUser(_currentUser);
 
             return _userFromFirebaseUser(user);
@@ -63,9 +68,9 @@ class AuthService {
             AuthResult result = await _auth.signInWithEmailAndPassword(email:email, password: password);
             FirebaseUser user = result.user;
 
-            //  create a new document for the user with the uid
             //  await  DatabaseService(uid: user.uid, email: user.email).updateUserData('New User', 'Not set', 'Not set');
 
+            //  create a new document for the user with the uid
             return _userFromFirebaseUser(user);
         }  catch(e) {
             print(e.toString());

@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
             theme: new ThemeData(
                 primarySwatch: Colors.red,
                 fontFamily:  'SFUIDisplay',
+                textTheme: TextTheme(subhead: TextStyle(fontWeight: FontWeight.bold)),
             ),
             home: Wrapper(),
         )

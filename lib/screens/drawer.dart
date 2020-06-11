@@ -44,7 +44,7 @@ class _MainDrawerState extends State<MainDrawer> {
                                                Container(
                                                  width: 110,
                                                  height: 110,
-                                                 margin: EdgeInsets.only(top: 30, bottom: 10),
+                                                 margin: EdgeInsets.only(top: 23, bottom: 7),
                                                  decoration: BoxDecoration(
                                                    shape: BoxShape.circle,
                                                    image: DecorationImage(image: NetworkImage(
@@ -59,7 +59,7 @@ class _MainDrawerState extends State<MainDrawer> {
                                                        color: Colors.white)),
                                                Text(snapshot.data != null ? snapshot
                                                    .data['email'] : ' ', style: TextStyle(
-                                                   fontSize: 15, color: Colors.white)),
+                                                   fontSize: 16, color: Colors.white)),
                                              ],
                                            ),
                                  ),
@@ -113,7 +113,7 @@ class _MainDrawerState extends State<MainDrawer> {
                                  onTap: () {
                                    Navigator.pop(context);
                                    Navigator.push(context,
-                                       MaterialPageRoute(builder: (context) => Request()));
+                                       MaterialPageRoute(builder: (context) => Request(uid: widget.uid)));
                                  },
                                ),
                                ListTile(
@@ -146,6 +146,7 @@ class _MainDrawerState extends State<MainDrawer> {
                                  title: Text(' Log Out', style: TextStyle(
                                      fontSize: 18, fontWeight: FontWeight.w900)),
                                  onTap: () async {
+                                   Navigator.pop(context);
                                    await _auth.signOut();
                                  },
                                ),

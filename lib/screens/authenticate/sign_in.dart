@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netninja/services/auth.dart';
 import 'package:netninja/shared/loading.dart';
+import 'package:netninja/shared/constant.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -56,27 +57,17 @@ class _SignInState extends State<SignIn> {
                     decoration: new InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.red,
-                              width: 1.5,
-                              style: BorderStyle.solid
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 1.5,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
+                        errorBorder: CustOutlineInputBorder,
+                        focusedErrorBorder: CustOutlineInputBorder,
+                        enabledBorder: CustOutlineInputBorder,
+                        focusedBorder: CustOutlineInputBorder,
                         hintText: 'Email',
-                        hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                        hintStyle: TextHint1,
                         prefixIcon: Icon(Icons.mail, color: Colors.red,)
                     ),
                     validator: (val) => val.isEmpty ? 'Enter an email' : null,
                     onChanged: (val) {
-                      setState(() => email = val);
+                        setState(() => email = val);
                     },
                   ),
                   SizedBox(height: 25.0),
@@ -86,22 +77,12 @@ class _SignInState extends State<SignIn> {
                     decoration: new InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.red,
-                              width: 1.5,
-                              style: BorderStyle.solid
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 1.5,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
+                        errorBorder: CustOutlineInputBorder,
+                        focusedErrorBorder: CustOutlineInputBorder,
+                        enabledBorder: CustOutlineInputBorder,
+                        focusedBorder: CustOutlineInputBorder,
                         hintText: 'Password',
-                        hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
+                        hintStyle: TextHint1,
                         prefixIcon: Icon(Icons.lock, color: Colors.red),
                         suffixIcon: IconButton(
                           onPressed: _toggleVisibility,

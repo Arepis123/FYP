@@ -21,7 +21,10 @@ class DatabaseService {
 
   Future createUser(NewUser user) async {
       try {
-          await userCollection.document(user.id).setData(user.toJson());
+          await userCollection.document(user.id).setData(user.toJson())
+              .whenComplete((){
+                  print('New User Created');
+              });
       } catch (e) {
           return e.message;
       }
@@ -57,6 +60,7 @@ class DatabaseService {
   Future updateImageURL(url) async {
       return await userCollection.document(uid).updateData({
           'imageURL': url.toString()
+
       });
   }
 
@@ -65,7 +69,10 @@ class DatabaseService {
       'name': name,
       'gender': gender,
       'age': age,
-    });
+    })
+        .whenComplete((){
+            print('User Profile Updated');
+        });
   }
 
   bool isLoggedIn() {

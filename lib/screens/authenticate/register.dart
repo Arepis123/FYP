@@ -3,6 +3,7 @@
 import 'package:intl/intl.dart';
   import 'package:netninja/services/auth.dart';
   import 'package:netninja/shared/loading.dart';
+  import 'package:netninja/shared/constant.dart';
 
   class Register extends StatefulWidget {
 
@@ -19,10 +20,8 @@ import 'package:intl/intl.dart';
     final _formKey = GlobalKey<FormState>();
 
     bool loading = false;
-    // Initially password is obscure
     bool _obscureText = true;
 
-    // text field state
     String email = '' ;
     String password = '' ;
     String name = '' ;
@@ -32,28 +31,11 @@ import 'package:intl/intl.dart';
     String _selectedType;
     List <String> genderList = <String> ['Male','Female'];
 
-    // Toggles the password show status
     void _toggleVisibility() {
       setState(() {
         _obscureText = !_obscureText;
       });
     }
-
-
-//    DateTime _date = DateTime.now();
-//    Future <Null> _selectDate(BuildContext context) async {
-//        DateTime _datePicker = await showDatePicker(
-//            context: context,
-//            initialDate: _date,
-//            firstDate: DateTime(1950),
-//            lastDate: DateTime.now(),
-//        );
-//        if( _datePicker !=  null && _datePicker != _date ) {
-//            setState(() {
-//                _date = _datePicker;
-//            });
-//        }
-//    }
 
     DateTime selectedDate =DateTime.now();
     TextEditingController _date = new TextEditingController();
@@ -97,20 +79,10 @@ import 'package:intl/intl.dart';
                               decoration: new InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.red,
-                                        width: 1.5,
-                                        style: BorderStyle.solid
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 1.5,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
+                                  errorBorder: CustOutlineInputBorder,
+                                  focusedErrorBorder: CustOutlineInputBorder,
+                                  enabledBorder: CustOutlineInputBorder,
+                                  focusedBorder: CustOutlineInputBorder,
                                   hintText: 'Email',
                                   hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.mail, color: Colors.red,)
@@ -128,20 +100,10 @@ import 'package:intl/intl.dart';
                               decoration: new InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.red,
-                                        width: 1.5,
-                                        style: BorderStyle.solid
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 1.5,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
+                                  errorBorder: CustOutlineInputBorder,
+                                  focusedErrorBorder: CustOutlineInputBorder,
+                                  enabledBorder: CustOutlineInputBorder,
+                                  focusedBorder: CustOutlineInputBorder,
                                   hintText: 'Password',
                                   hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.lock, color: Colors.red),
@@ -163,20 +125,10 @@ import 'package:intl/intl.dart';
                               decoration: new InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.red,
-                                        width: 1.5,
-                                        style: BorderStyle.solid
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 1.5,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
+                                  errorBorder: CustOutlineInputBorder,
+                                  focusedErrorBorder: CustOutlineInputBorder,
+                                  enabledBorder: CustOutlineInputBorder,
+                                  focusedBorder: CustOutlineInputBorder,
                                   hintText: 'Name',
                                   hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.account_circle, color: Colors.red,)
@@ -197,20 +149,10 @@ import 'package:intl/intl.dart';
                                   decoration: new InputDecoration(
                                       filled: true,
                                       fillColor: Colors.white,
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.red,
-                                            width: 1.5,
-                                            style: BorderStyle.solid
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.red,
-                                          width: 1.5,
-                                          style: BorderStyle.solid,
-                                        ),
-                                      ),
+                                      errorBorder: CustOutlineInputBorder,
+                                      focusedErrorBorder: CustOutlineInputBorder,
+                                      enabledBorder: CustOutlineInputBorder,
+                                      focusedBorder: CustOutlineInputBorder,
                                       hintText:'Enter birth date',
                                       hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                       prefixIcon: Icon(Icons.calendar_today, color: Colors.red,)

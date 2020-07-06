@@ -2,10 +2,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:netninja/screens/admin.dart';
+import 'package:netninja/screens/locationPage.dart';
+import 'package:netninja/screens/personalInfo.dart';
 import 'package:netninja/screens/profile.dart';
 import 'package:netninja/screens/request.dart';
 import 'package:netninja/services/auth.dart';
 import 'package:netninja/shared/loading.dart';
+import 'package:netninja/screens/noti.dart';
+
 
 class MainDrawer extends StatefulWidget {
 
@@ -91,18 +95,9 @@ class _MainDrawerState extends State<MainDrawer> {
                                  onTap: () {
                                    Navigator.of(context).pop();
                                    Navigator.push(context,
-                                       MaterialPageRoute(builder: (context) => Profile(
+                                       MaterialPageRoute(builder: (context) => PreProfile(
                                            userId: widget.uid)));
                                  },
-                               ),
-                               ListTile(
-                                 contentPadding: EdgeInsets.symmetric(
-                                     vertical: 4, horizontal: 30),
-                                 leading: Icon(
-                                     Icons.watch_later, color: Colors.red, size: 28),
-                                 title: Text(' History', style: TextStyle(
-                                     fontSize: 18, fontWeight: FontWeight.w900)),
-                                 onTap: () {},
                                ),
                                ListTile(
                                  contentPadding: EdgeInsets.symmetric(
@@ -130,12 +125,27 @@ class _MainDrawerState extends State<MainDrawer> {
                                  contentPadding: EdgeInsets.symmetric(
                                      vertical: 4, horizontal: 30),
                                  leading: Icon(
+                                     Icons.watch_later, color: Colors.red, size: 28),
+                                 title: Text(' Notification', style: TextStyle(
+                                     fontSize: 18, fontWeight: FontWeight.w900)),
+                                 onTap: () {
+                                   Navigator.pop(context);
+                                   Navigator.push(context,
+                                       MaterialPageRoute(builder: (context) => Noti(uid: widget.uid)));
+                                 },
+                               ),
+                               ListTile(
+                                 contentPadding: EdgeInsets.symmetric(
+                                     vertical: 4, horizontal: 30),
+                                 leading: Icon(
                                      Icons.rate_review, color: Colors.red, size: 28),
                                  title: Text(' Write Review', style: TextStyle(
                                      fontSize: 18, fontWeight: FontWeight.w900)),
                                  onTap: () {
                                    print(widget.uid);
                                    Navigator.pop(context);
+                                   Navigator.push(context,
+                                       MaterialPageRoute(builder: (context) => LocationPage(uid: widget.uid)));
                                  },
                                ),
                                ListTile(

@@ -10,6 +10,8 @@ class AuthService {
     NewUser _currentUser;
     NewUser get currentUser => _currentUser;
     String role = 'User';
+    int noReview = 0;
+    int noPlaceAdded = 0;
     String imageURL= 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQsKNbGtuXiKKlaS0oDJ72NksP7CS-tl7YInR67NXNTgfvTfkXk&usqp=CAU';
 
     // create user obj based on FirebaseUser
@@ -51,7 +53,9 @@ class AuthService {
                 age: age,
                 gender: gender,
                 role: role,
-                imageURL: imageURL
+                imageURL: imageURL,
+                noReview: noReview,
+                noPlaceAdded: noPlaceAdded,
             );
             await DatabaseService().createUser(_currentUser);
 

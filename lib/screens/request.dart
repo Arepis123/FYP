@@ -9,6 +9,7 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home/home.dart';
+import 'locationPage.dart';
 
 class Request extends StatefulWidget {
 
@@ -200,6 +201,10 @@ class _RequestState extends State<Request> {
                                 onPressed: () {
                                     if (formKey.currentState.validate()) {
                                       formKey.currentState.reset();
+                                      if (placePhone.length < 3 || placeHours.length < 3) {
+                                        placePhone = '-';
+                                        placeHours = '-';
+                                      };
                                       Navigator.push(context,MaterialPageRoute(builder: (context) => FireMap(userid: widget.uid, placeName: placeName, placeAddress: placeAddress, placeCategory: placeCategory, placeHours: placeHours, placeNotes: placeNotes, placePhone: placePhone )));
                                     }
                                 },
@@ -240,11 +245,30 @@ class _RequestState extends State<Request> {
 
     CameraPosition _position = _kInitialPosition;
     MapType currentMapType  = MapType.normal;
+    final Geolocator geolocator = Geolocator();                                         // new
     GoogleMapController mapController;
+    List<Marker> allMarkers = [];
     LatLng currentLocation = LatLng(24.150, -110.32);
     LatLng get initialPos => currentLocation;
     Location location = new Location();
+    LocationData currentLocationData;                                                               // new
+    Position currentPosition;                                                                                              // new
+    BitmapDescriptor icon;
+    String address = '';                                                                                                                 // new
     bool buscando = false;
+
+    setMarker() {
+        return allMarkers;
+    }
+
+    getIcons() async {
+      var icon = await BitmapDescriptor.fromAssetImage(
+          ImageConfiguration(devicePixelRatio: 3.5),
+          "assets/images/marker2.png");
+      setState(() {
+        this.icon = icon;
+      });
+    }
 
 
    void getMoveCamera() async {
@@ -282,10 +306,38 @@ class _RequestState extends State<Request> {
     Firestore firestore = Firestore.instance;
     Geoflutterfire geo = Geoflutterfire();
 
-    final Map<String, Marker> _markers = {};
+    Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+    setMarkers() {
+        firestore.collection('locations').getDocuments().then((docs) {
+            if (docs.documents.isNotEmpty) {
+                for (int i=0; i<docs.documents.length; i++) {
+                  initMarker(docs.documents[i].data, docs.documents[i].documentID);
+                }
+            }
+        });
+    }
+
+    void initMarker(data, docID) {
+      var markerIdVal = docID;
+      final MarkerId markerId = MarkerId(markerIdVal);
+
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(data['LatLng'].latitude, data['LatLng'].longitude),
+        infoWindow: InfoWindow(title: data['placeName'], snippet: data['category']),
+      );
+
+      setState(() {
+        // adding a new marker to map
+        markers[markerId] = marker;
+      });
+    }
 
     @override
       void initState() {
+          //getIcons();
+          setMarkers();
           getUserLocation();
            super.initState();
       }
@@ -317,6 +369,7 @@ class _RequestState extends State<Request> {
                     mapType: currentMapType,
                     onCameraMove: onCameraMove ,
                     zoomControlsEnabled: false,
+                  markers: Set<Marker>.of(markers.values),
                 ),
                 Align(
                     alignment: Alignment.center,
@@ -396,8 +449,10 @@ class _RequestState extends State<Request> {
   }
 
     Future  _addGeoPoint() async {
-      Firestore.instance.collection('locations').document().setData({
+      DocumentReference docRef =  Firestore.instance.collection('locations').document();
+      docRef.setData({
         "id": widget.userid,
+        "docID": docRef.documentID,
         "verified": "No",
         "placeName": widget.placeName,
         "placeAddress": widget.placeAddress,
@@ -409,7 +464,9 @@ class _RequestState extends State<Request> {
       })
           .whenComplete(() {
         print('Geolocation Added');
-        Navigator.push(context,MaterialPageRoute(builder: (context) => Home(uuid: widget.userid)));
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.push(context,MaterialPageRoute(builder: (context) => LocationPage(uid: widget.userid, docID: docRef.documentID)));
         showDialog(
             context: context,
             builder: (context) {
@@ -428,7 +485,6 @@ class _RequestState extends State<Request> {
 //      sharedPrefs.setString('long', currentLocation.longitude.toString());
 //      sharedPrefs.setString('latit', currentLocation.latitude.toString());
     }
-
   }
   
 

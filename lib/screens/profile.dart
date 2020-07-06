@@ -36,7 +36,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-            title: new Text("Profile",style: TextStyle( fontWeight: FontWeight.bold)),
+            title: new Text("Personal Information",style: TextStyle( fontWeight: FontWeight.bold)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -46,7 +46,7 @@ class _ProfileState extends State<Profile> {
                     if (!snapshot.hasData) {
                       return Loading();
                     }
-                    return   Container(
+                    return  Container(
                       padding: EdgeInsets.all(15.0),
                           child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -13,16 +13,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-//  FirebaseUser user;
-//  String error;
-//
-//  void setUser(FirebaseUser user) {
-//    setState(() {
-//      this.user = user;
-//      this.error = null;
-//    });
-//  }
-
   @override
   void initState() {
     super.initState();
@@ -32,16 +22,37 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: MainDrawer(uid: widget.uuid),
-      appBar: AppBar(
-        title: Text('JomShare', style: TextStyle( fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
+    return WillPopScope(
+        onWillPop: willPopBack,
+        child: Scaffold(
+          drawer: MainDrawer(uid: widget.uuid),
+          appBar: AppBar(
+            title: Text('JomShare', style: TextStyle( fontWeight: FontWeight.bold)),
+            centerTitle: true,
+          ),
+        ),
     );
   }
 
-
+Future <bool> willPopBack() async {
+  return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+          title: Text('Do you really want to exit the application?', style: TextStyle(  fontSize: 18, fontWeight: FontWeight.w600, fontFamily: 'SFUIDisplay')),
+          actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text('NO', style: TextStyle(  fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'SFUIDisplay')),
+              ),
+            FlatButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('YES', style: TextStyle(  fontSize: 15, fontWeight: FontWeight.w600, fontFamily: 'SFUIDisplay')),
+            )
+          ],
+      )
+  );
+}
 
 }
 

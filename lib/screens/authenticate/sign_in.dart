@@ -37,8 +37,8 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-      //backgroundColor: Colors.white,
-      backgroundColor: Colors.red[50],
+      backgroundColor: Colors.white,
+      //backgroundColor: Colors.red[50],
       body: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(30.0, 120.0,30.0, 5.0),
           child: Form(
@@ -56,7 +56,7 @@ class _SignInState extends State<SignIn> {
                     onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                     decoration: new InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.red[50],
                         errorBorder: CustOutlineInputBorder,
                         focusedErrorBorder: CustOutlineInputBorder,
                         enabledBorder: CustOutlineInputBorder,
@@ -76,7 +76,7 @@ class _SignInState extends State<SignIn> {
                     obscureText: _obscureText,
                     decoration: new InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.red.withOpacity(0.1),
                         errorBorder: CustOutlineInputBorder,
                         focusedErrorBorder: CustOutlineInputBorder,
                         enabledBorder: CustOutlineInputBorder,

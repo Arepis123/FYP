@@ -16,6 +16,7 @@ class DatabaseService {
 
   final CollectionReference reviewCollection = Firestore.instance.collection('reviews');
   final CollectionReference userCollection= Firestore.instance.collection("users");
+  final CollectionReference locationCollection= Firestore.instance.collection("locations");
   final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://netninja-6cb94.appspot.com');
 
 
@@ -73,6 +74,35 @@ class DatabaseService {
         .whenComplete((){
             print('User Profile Updated');
         });
+  }
+
+  Future updateLocation1(String docID,String name,String address,String category, String hour, String phone, String note) async {
+    return await locationCollection.document(docID).updateData({
+      'placeName': name,
+      'placeAddress': address,
+      'placeCategory': category,
+      'placeHours': hour,
+      'placePhone': phone,
+      'placeNotes': note
+    })
+        .whenComplete((){
+      print('User Profile Updated');
+    });
+  }
+
+  Future updateLocation2(String docID,String name,String address,String category, String hour, String phone, String note) async {
+    return await locationCollection.document(docID).updateData({
+      'placeName': name,
+      'placeAddress': address,
+      'placeCategory': category,
+      'placeHours': hour,
+      'placePhone': phone,
+      'placeNotes': note,
+      'verified': 'Yes'
+    })
+        .whenComplete((){
+      print('User Profile Updated');
+    });
   }
 
   bool isLoggedIn() {

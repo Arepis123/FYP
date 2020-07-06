@@ -56,9 +56,9 @@ import 'package:intl/intl.dart';
     @override
     Widget build(BuildContext context) {
         return loading ? Loading() : Scaffold(
-            backgroundColor: Colors.red[50],
+            backgroundColor: Colors.white,
             body:SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(30.0, 70.0,30.0, 5.0),
+                padding: EdgeInsets.fromLTRB(30.0, 100.0,30.0, 0),
                 child: Form(
                     key: _formKey,
                     child: Column(
@@ -78,11 +78,12 @@ import 'package:intl/intl.dart';
                               onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                               decoration: new InputDecoration(
                                   filled: true,
-                                  fillColor: Colors.white,
+                                  fillColor: Colors.red[50],
                                   errorBorder: CustOutlineInputBorder,
                                   focusedErrorBorder: CustOutlineInputBorder,
                                   enabledBorder: CustOutlineInputBorder,
                                   focusedBorder: CustOutlineInputBorder,
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 17, horizontal: 15),
                                   hintText: 'Email',
                                   hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.mail, color: Colors.red,)
@@ -99,11 +100,12 @@ import 'package:intl/intl.dart';
                               obscureText: _obscureText,
                               decoration: new InputDecoration(
                                   filled: true,
-                                  fillColor: Colors.white,
+                                  fillColor: Colors.red[50],
                                   errorBorder: CustOutlineInputBorder,
                                   focusedErrorBorder: CustOutlineInputBorder,
                                   enabledBorder: CustOutlineInputBorder,
                                   focusedBorder: CustOutlineInputBorder,
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 17, horizontal: 15),
                                   hintText: 'Password',
                                   hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.lock, color: Colors.red),
@@ -124,11 +126,12 @@ import 'package:intl/intl.dart';
                               onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                               decoration: new InputDecoration(
                                   filled: true,
-                                  fillColor: Colors.white,
+                                  fillColor: Colors.red[50],
                                   errorBorder: CustOutlineInputBorder,
                                   focusedErrorBorder: CustOutlineInputBorder,
                                   enabledBorder: CustOutlineInputBorder,
                                   focusedBorder: CustOutlineInputBorder,
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 17, horizontal: 15),
                                   hintText: 'Name',
                                   hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                   prefixIcon: Icon(Icons.account_circle, color: Colors.red,)
@@ -148,11 +151,12 @@ import 'package:intl/intl.dart';
                                   readOnly: true,
                                   decoration: new InputDecoration(
                                       filled: true,
-                                      fillColor: Colors.white,
+                                      fillColor: Colors.red[50],
                                       errorBorder: CustOutlineInputBorder,
                                       focusedErrorBorder: CustOutlineInputBorder,
                                       enabledBorder: CustOutlineInputBorder,
                                       focusedBorder: CustOutlineInputBorder,
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 17, horizontal: 15),
                                       hintText:'Enter birth date',
                                       hintStyle: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey),
                                       prefixIcon: Icon(Icons.calendar_today, color: Colors.red,)
@@ -162,18 +166,19 @@ import 'package:intl/intl.dart';
                             ),
                             SizedBox(height: 20.0),
                             Container(
+                              height: 52,
                               margin: EdgeInsets.all(0.2),                                                                                        // spacing outside border
                               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3.5),        // spacing inside border
                               //padding: EdgeInsets.symmetric(horizontal: 73, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.red[50],
                                 borderRadius: BorderRadius.circular(3.5),
                                 border: Border.all(
                                     color: Colors.red,style: BorderStyle.solid, width: 1.5),
                               ),
                                 child: DropdownButton(
                                     isExpanded: true,
-                                    hint: Text('What is your gender?', style: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey)),
+                                    hint: Text('Choose gender', style: TextStyle(fontFamily: 'SFUIDisplay', fontSize: 16.0, fontWeight: FontWeight.bold, color:  Colors.grey)),
                                     value: _selectedType,
                                     onChanged: (newValue) {
                                         setState(() {

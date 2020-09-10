@@ -269,7 +269,7 @@ class _AdminUsersState extends State<AdminUsers> {
                             DateTime date1 = document[index].data['age'].toDate();
                             DateTime date2 = DateTime.now();
                             final age = date2.difference(date1).inDays / 365 ;
-                            changeRole(id, age.toString().substring(0,2));
+                            changeRole(id, age.truncate().toString().substring(0,2));
                           }: null,
                         ),
                       ),
@@ -563,8 +563,10 @@ class _AdminLocationState extends State<AdminLocation> {
                         splashColor: Colors.red.withAlpha(30),
                         onTap: () {Navigator.push(context,MaterialPageRoute(builder: (context) => AdminLocationProfile(uid: id, docID: docID)));},
                         onLongPress: () {
+                          setState(() {
+                            setMarkers(id,docID);
+                          });
                           mapView(id,docID);
-                          setMarkers(id,docID);
                           } ,
                         child: Column(
                           children: <Widget>[
@@ -583,12 +585,12 @@ class _AdminLocationState extends State<AdminLocation> {
                                         title: Text(snap.data.documents.toList()[0].data['email'], style: new TextStyle(fontSize: 16, letterSpacing: 0)),
                                         subtitle: Text(snap.data.documents.toList()[0].data['name'], style: new TextStyle( fontWeight: FontWeight.bold,letterSpacing: 0)),
                                       ),
+                                      Divider(color: Colors.grey.withOpacity(0.7), indent: 20, endIndent: 20, height: 2, thickness: 0.5),
                                     ],
                                   );
                                 },
                               ),
                             ),
-                            Divider(color: Colors.grey.withOpacity(0.7), indent: 20, endIndent: 20, height: 2, thickness: 0.5),
                             Container(
                               padding: EdgeInsets.fromLTRB(20, 10,10, 5),
                               child: Row(
@@ -643,8 +645,10 @@ class _AdminLocationState extends State<AdminLocation> {
   setMarkers(String uid, String docID) {
     Firestore.instance.collection('locations').where('docID', isEqualTo: docID).getDocuments().then((docs) {
       if (docs.documents.isNotEmpty) {
+        String name = '';
         for (int i=0; i<docs.documents.length; i++) {
           initMarker(docs.documents[i].data, docs.documents[i].documentID);
+          String name = docs.documents[i].data['placeName'];
         }
       }
     });
@@ -1028,7 +1032,7 @@ class _AdminLocationProfileState extends State<AdminLocationProfile> {
                                         borderRadius: new BorderRadius.circular(2.0),
                                         side: BorderSide(color: Colors.red)),
                                     onPressed: () {
-                                        Navigator.push(context,MaterialPageRoute(builder: (context) => AdminLocationEdit( uid: widget.uid,docID: widget.docID,name: snapshot.data['placeName'], address: snapshot.data['placeAddress'], category: snapshot.data['placeCategory'], hour: snapshot.data['placeHours'], phone: snapshot.data['placePhone'], notes: snapshot.data['placeNotes'])));
+                                        Navigator.push(context,MaterialPageRoute(builder: (context) => AdminLocationEdit( uid: widget.uid, uid2: snapshot.data['id'], docID: widget.docID,name: snapshot.data['placeName'], address: snapshot.data['placeAddress'], category: snapshot.data['placeCategory'], hour: snapshot.data['placeHours'], phone: snapshot.data['placePhone'], notes: snapshot.data['placeNotes'])));
                                     },
                                     color: Colors.red,
                                     //textColor: Colors.white,
@@ -1050,12 +1054,19 @@ class _AdminLocationProfileState extends State<AdminLocationProfile> {
                                         borderRadius: new BorderRadius.circular(2.0),
                                         side: BorderSide(color: Colors.red)),
                                     onPressed: () async {
+                                      Firestore.instance.collection('notifications').document().setData({
+                                        "dateTime": DateTime.now(),
+                                        "id": snapshot.data['id'],
+                                        "placeName": snapshot.data['placeName'],
+                                        "text": 'Your request has been verified',
+                                      });
                                       Firestore.instance.collection('locations').document(widget.docID).updateData({
                                         'verified': 'Yes',
                                       })
                                           .whenComplete((){
                                         print('Location Verify');
                                         Navigator.pop(context);
+                                        Navigator.pushReplacement(context, MaterialPageRoute( builder: (BuildContext context) => super.widget));
                                       });
                                     },
                                     color: Colors.red,
@@ -1431,6 +1442,7 @@ class _AdminLocationMapEditState extends State<AdminLocationMapEdit> {
 class AdminLocationEdit extends StatefulWidget {
 
   final String uid;
+  final String uid2;
   final String docID;
   final String name;
   final String address;
@@ -1438,7 +1450,7 @@ class AdminLocationEdit extends StatefulWidget {
   final String hour;
   final String phone;
   final String notes;
-  AdminLocationEdit({ this.uid, this.docID, this.name, this.address, this.category, this.hour, this.phone, this.notes});
+  AdminLocationEdit({ this.uid, this.uid2, this.docID, this.name, this.address, this.category, this.hour, this.phone, this.notes});
 
   @override
   _AdminLocationEditState createState() => _AdminLocationEditState();
@@ -1446,7 +1458,7 @@ class AdminLocationEdit extends StatefulWidget {
 
 class _AdminLocationEditState extends State<AdminLocationEdit> {
 
-  TextEditingController nameController, addressController, categoryController, hourController, phoneController, noteController ;
+  TextEditingController nameController, addressController, categoryController, hourController, phoneController, noteController, remarkController ;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -1641,7 +1653,7 @@ class _AdminLocationEditState extends State<AdminLocationEdit> {
                         textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                         controller: noteController,
-                        maxLines: 4,
+                        maxLines: 3,
                         autofocus: false,
                         keyboardType: TextInputType.text,
                         decoration: new InputDecoration(
@@ -1722,9 +1734,16 @@ class _AdminLocationEditState extends State<AdminLocationEdit> {
                               onPressed: () async {
                                 final action = await DialogBox.yesAbortDialog(context, 'Update Location Details', 'Are you sure you want to update the details?');
                                 if (action == DialogAction.yes) {
-                                  DatabaseService().updateLocation2(widget.docID, nameController.text, addressController.text, categoryController.text, hourController.text, phoneController.text, noteController.text);
+                                  Firestore.instance.collection('notifications').document().setData({
+                                    "dateTime": DateTime.now(),
+                                    "id": widget.uid2,
+                                    "placeName": nameController.text,
+                                    "text": 'Your request has been verified',
+                                  });
+                                  DatabaseService().updateLocation2(widget.docID, widget.uid2, nameController.text, addressController.text, categoryController.text, hourController.text, phoneController.text, noteController.text);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
+                                  //Navigator.pushReplacement(context, MaterialPageRoute( builder: (BuildContext context) => super.widget));
                                   showDialog(
                                       context: context,
                                       builder: (context) {
@@ -1756,9 +1775,3 @@ class _AdminLocationEditState extends State<AdminLocationEdit> {
     );
   }
 }
-
-
-
-
-
-

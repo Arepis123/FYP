@@ -86,11 +86,11 @@ class DatabaseService {
       'placeNotes': note
     })
         .whenComplete((){
-      print('User Profile Updated');
+      print('Details Updated');
     });
   }
 
-  Future updateLocation2(String docID,String name,String address,String category, String hour, String phone, String note) async {
+  Future updateLocation2(String docID,String uid2, String name,String address,String category, String hour, String phone, String note) async {
     return await locationCollection.document(docID).updateData({
       'placeName': name,
       'placeAddress': address,
@@ -101,7 +101,7 @@ class DatabaseService {
       'verified': 'Yes'
     })
         .whenComplete((){
-      print('User Profile Updated');
+      print('Details Updated');
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:netninja/shared/loading.dart';
 
 class Noti extends StatefulWidget {
@@ -27,7 +28,7 @@ class _NotiState extends State<Noti> {
             child: Column(
               children: <Widget>[
                 StreamBuilder(
-                  stream: Firestore.instance.collection('notifications').snapshots(),
+                  stream: Firestore.instance.collection('notifications').where('id', isEqualTo: widget.uid).snapshots(),
                   builder:  (context, AsyncSnapshot <QuerySnapshot> snapshot) {
                     if(!snapshot.hasData) {
                       return Loading();
@@ -39,14 +40,32 @@ class _NotiState extends State<Noti> {
                       itemCount:  document.length,
                        itemBuilder: (BuildContext context, int index) {
                          String text = document[index].data['text'];
+                         String place = document[index].data['placeName'];
+                         String timeString = document[index].data['dateTime'].toDate().toString();
+                         DateTime date2 =  DateTime.parse(timeString);
                          return Card(
                            elevation: 3,
                            child: InkWell(
                              splashColor: Colors.red.withAlpha(30),
                              onTap: () { },
                              child: ListTile(
-                               title: Text('Notification', style: new TextStyle(fontSize: 16, letterSpacing: 0)),
-                               subtitle: Text(text, style: new TextStyle( fontWeight: FontWeight.bold,letterSpacing: 0)),
+                               title: Container(
+                                  width: 300,
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text('Notification', style: new TextStyle(fontSize: 16, letterSpacing: 0)),
+                                        Text(DateFormat('yyyy-MM-dd').format(date2).toString(), style: new TextStyle( fontWeight: FontWeight.bold,letterSpacing: 0, fontSize: 13))
+                                      ],
+                                  ),
+                               ),
+                               subtitle: Column(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(text, style: new TextStyle( fontWeight: FontWeight.bold,letterSpacing: 0)),
+                                    Text(place, style: new TextStyle( fontWeight: FontWeight.bold,letterSpacing: 0)),
+                                  ],
+                               ),
                                onTap: (){},
                              ),
                            ),

@@ -2,13 +2,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:netninja/screens/admin.dart';
+import 'package:netninja/screens/bookmark.dart';
+import 'package:netninja/screens/history.dart';
 import 'package:netninja/screens/locationPage.dart';
+import 'package:netninja/screens/nearbyplaces.dart';
 import 'package:netninja/screens/personalInfo.dart';
 import 'package:netninja/screens/profile.dart';
 import 'package:netninja/screens/request.dart';
 import 'package:netninja/services/auth.dart';
 import 'package:netninja/shared/loading.dart';
 import 'package:netninja/screens/noti.dart';
+import 'package:netninja/uploadImages.dart';
 
 
 class MainDrawer extends StatefulWidget {
@@ -102,13 +106,14 @@ class _MainDrawerState extends State<MainDrawer> {
                                ListTile(
                                  contentPadding: EdgeInsets.symmetric(
                                      vertical: 4, horizontal: 30),
-                                 leading: Icon(Icons.add_circle, color: Colors.red, size: 28),
-                                 title: Text(' Request', style: TextStyle(
+                                 leading: Icon(
+                                     Icons.watch_later, color: Colors.red, size: 28),
+                                 title: Text(' History', style: TextStyle(
                                      fontSize: 18, fontWeight: FontWeight.w900)),
                                  onTap: () {
                                    Navigator.pop(context);
-                                   Navigator.push(context,
-                                       MaterialPageRoute(builder: (context) => Request(uid: widget.uid)));
+                                   //Navigator.push(context, MaterialPageRoute(builder: (context) => Noti(uid: widget.uid)));
+                                   Navigator.push(context, MaterialPageRoute(builder: (context) => History(uid: widget.uid)));
                                  },
                                ),
                                ListTile(
@@ -119,13 +124,14 @@ class _MainDrawerState extends State<MainDrawer> {
                                      fontSize: 18, fontWeight: FontWeight.w900)),
                                  onTap: () {
                                    Navigator.pop(context);
+                                   Navigator.push(context,
+                                       MaterialPageRoute(builder: (context) => Bookmark(uid: widget.uid)));
                                  },
                                ),
                                ListTile(
                                  contentPadding: EdgeInsets.symmetric(
                                      vertical: 4, horizontal: 30),
-                                 leading: Icon(
-                                     Icons.watch_later, color: Colors.red, size: 28),
+                                 leading: Icon(Icons.book, color: Colors.red, size: 28),
                                  title: Text(' Notification', style: TextStyle(
                                      fontSize: 18, fontWeight: FontWeight.w900)),
                                  onTap: () {
@@ -137,20 +143,32 @@ class _MainDrawerState extends State<MainDrawer> {
                                ListTile(
                                  contentPadding: EdgeInsets.symmetric(
                                      vertical: 4, horizontal: 30),
-                                 leading: Icon(
-                                     Icons.rate_review, color: Colors.red, size: 28),
-                                 title: Text(' Write Review', style: TextStyle(
+                                 leading: Icon(Icons.add_circle, color: Colors.red, size: 28),
+                                 title: Text(' Add New Place', style: TextStyle(
                                      fontSize: 18, fontWeight: FontWeight.w900)),
                                  onTap: () {
-                                   print(widget.uid);
                                    Navigator.pop(context);
                                    Navigator.push(context,
-                                       MaterialPageRoute(builder: (context) => LocationPage(uid: widget.uid)));
+                                       MaterialPageRoute(builder: (context) => Request(uid: widget.uid)));
                                  },
                                ),
                                ListTile(
                                  contentPadding: EdgeInsets.symmetric(
                                      vertical: 4, horizontal: 30),
+                                 leading: Icon(
+                                     Icons.find_in_page, color: Colors.red, size: 28),
+                                 title: Text(' Find Nearby Places', style: TextStyle(
+                                     fontSize: 18, fontWeight: FontWeight.w900)),
+                                 onTap: () {
+                                   print(widget.uid);
+                                   Navigator.pop(context);
+                                   Navigator.push(context,
+                                       MaterialPageRoute(builder: (context) => NearbyPlaces(uid: widget.uid)));
+                                 },
+                               ),
+                               ListTile(
+                                 contentPadding: EdgeInsets.symmetric(
+                                     vertical: 7, horizontal: 30),
                                  leading: Icon(
                                      Icons.power_settings_new, color: Colors.red, size: 28),
                                  title: Text(' Log Out', style: TextStyle(

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:netninja/shared/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,7 +27,7 @@ class _RequestState extends State<Request> {
   String placeName = '', placeAddress = '', placeCategory = '', placeHours = '', placePhone = '', placeNotes = '';
   String _selectedType;
   String documentID;
-  List <String> genderList = <String> ['Park','Restaurant','Auto Service','Historical Place'];
+  List <String> genderList = <String> ['Entertainment','Restaurant','Historical Place'];
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +270,6 @@ class _RequestState extends State<Request> {
       });
     }
 
-
    void getMoveCamera() async {
         List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(
             currentLocation.latitude,
@@ -278,13 +277,20 @@ class _RequestState extends State<Request> {
         );
    }
 
+    getAddress(Coordinates coordinates)  async {
+        final addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        setState(() {
+            address = addresses.first.addressLine;
+        });
+   }
+
   void getUserLocation() async {
       Position position = await Geolocator().getCurrentPosition();
       List<Placemark> placemark = await Geolocator().placemarkFromCoordinates(position.latitude, position.longitude);
       currentLocation = LatLng(position.latitude,position.longitude);
       mapController.animateCamera(CameraUpdate.newLatLng(currentLocation));
-
-  }
+      //getAddress(Coordinates(position.latitude,position.longitude));
+    }
 
   void onCameraMove(CameraPosition position) async {
       buscando = false;
@@ -304,9 +310,28 @@ class _RequestState extends State<Request> {
   }
 
     Firestore firestore = Firestore.instance;
-    Geoflutterfire geo = Geoflutterfire();
+    //Geoflutterfire geo = Geoflutterfire();
 
     Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+    int noPlaceAdded = 0;
+
+    setRevNo() {
+      firestore.collection('users').where('id', isEqualTo: widget.userid).getDocuments().then((docs) {
+        if (docs.documents.isNotEmpty) {
+          for (int i=0; i<docs.documents.length; i++) {
+                //initRevNo(docs.documents[i].data);
+                noPlaceAdded = docs.documents[i].data['noPlaceAdded'];
+          }
+        }
+      });
+    }
+//
+//    void initRevNo(data) {
+//      setState(() {
+//        noPlaceAdded = data['noPlaceAdded'];
+//      });
+//    }
 
     setMarkers() {
         firestore.collection('locations').getDocuments().then((docs) {
@@ -338,12 +363,13 @@ class _RequestState extends State<Request> {
       void initState() {
           //getIcons();
           setMarkers();
+          setRevNo();
           getUserLocation();
            super.initState();
       }
 
     static final CameraPosition _kInitialPosition = const CameraPosition(
-      target: LatLng(24.150, -110.32),
+      target: LatLng(6.3693, 100.4928),
       zoom: 10,
     );
 
@@ -358,7 +384,7 @@ class _RequestState extends State<Request> {
             children: [
                 GoogleMap(
                     initialCameraPosition: CameraPosition(
-                        target: LatLng(24.142, -110.321),
+                        target: LatLng(6.3693,  100.4928),
                         zoom: 17,
                     ),
                     onCameraIdle: () async {
@@ -369,7 +395,7 @@ class _RequestState extends State<Request> {
                     mapType: currentMapType,
                     onCameraMove: onCameraMove ,
                     zoomControlsEnabled: false,
-                  markers: Set<Marker>.of(markers.values),
+                    markers: Set<Marker>.of(markers.values),
                 ),
                 Align(
                     alignment: Alignment.center,
@@ -406,7 +432,9 @@ class _RequestState extends State<Request> {
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(3.0),
                             side: BorderSide(color: Colors.red)),
-                        onPressed: _addGeoPoint,
+                        onPressed: () {
+                          _addGeoPoint();
+                        },
                         color: Colors.red,
                         //textColor: Colors.white,
                         child: Text("Set Location",
@@ -424,7 +452,7 @@ class _RequestState extends State<Request> {
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(3.0),
                           side: BorderSide(color: Colors.red)),
-                      onPressed:onMapTypePressed,
+                      onPressed: onMapTypePressed ,
                       color: Colors.red,
                       //textColor: Colors.white,
                       child:  Icon(Icons.map, color: Colors.white, size: 35)
@@ -449,6 +477,7 @@ class _RequestState extends State<Request> {
   }
 
     Future  _addGeoPoint() async {
+      Firestore.instance.collection('users').document(widget.userid).updateData({'noPlaceAdded': noPlaceAdded + 1});
       DocumentReference docRef =  Firestore.instance.collection('locations').document();
       docRef.setData({
         "id": widget.userid,
@@ -460,6 +489,8 @@ class _RequestState extends State<Request> {
         "placeCategory": widget.placeCategory,
         "placePhone": widget.placePhone,
         "placeNotes": widget.placeNotes,
+        "noReview": 0,
+        "avgRate": 0,
         "LatLng": new GeoPoint(currentLocation.latitude, currentLocation.longitude)
       })
           .whenComplete(() {
